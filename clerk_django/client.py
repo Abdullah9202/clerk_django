@@ -27,7 +27,8 @@ class ClerkClient:
     
     def decode_jwt(self, token: str):
         if self.public_pem_key:
-            return jwt.decode(token, key=self.public_pem_key, algorithms=['RS256', ])
+            return jwt.decode(token, key=self.public_pem_key, algorithms=['RS256', ], 
+                              options={"verify_iat": True}, leeway=300) # 300 seconds = 5 minutes (Sufficient for most of scenarios)
         else: 
             raise Exception(
                 "The public_pem_key client option must be set either by passing public_pem_key to the client or by setting the CLERK_PEM_PUBLIC_KEY environment variable"
